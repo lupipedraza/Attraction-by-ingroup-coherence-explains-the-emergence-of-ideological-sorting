@@ -26,12 +26,10 @@ class Agentes():
         self.dim=dim
         
    def CalcularIdeologia(self,alpha):
-       if alpha==False:
-           self.Ideologia=np.sum(self.Estado,axis=1)/self.dim
-       else:
-           self.Ideologia=np.sum(self.Estado,axis=1)/self.dim
-           self.Ideologiaxy=[[np.dot([1,alpha],e),np.dot([alpha,1],e)] for e in self.Estado]
-           self.Ideologiay=[np.dot([alpha,1],e) for e in self.Estado]
+        #self.Ideologia=np.sum(self.Estado,axis=1)/self.dim
+        self.Ideologia=np.sum(self.Estado,axis=1)/self.dim
+        self.Ideologiaxy=[[np.dot([1,alpha],e)/2,np.dot([alpha,1],e)/2] for e in self.Estado]
+        self.Ideologiay=[np.dot([alpha,1],e) for e in self.Estado]
 
    def Emparejar(self):
         self.Js=list(range(self.n))
@@ -46,8 +44,8 @@ class Agentes():
        self.Identidad=[(int(I>0)) for I in Identidad]
 
    def ProbabilidadInteraccion(self,k1):
-       self.P=(k1)*(1-self.S)+np.array([(1-k1)*(abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])]))*self.Identidad[i] for i in range(self.n)]) #distancia
-             
+       #self.P=(k1)*(1-self.S)+np.array([(1-k1)*(abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])]))*self.Identidad[i] for i in range(self.n)]) #distancia
+       self.P=(k1)*(1-self.S)/2+np.array([((abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])])))/2 for i in range(self.n)]) #distancia      
        '''
        if tipoP=='lineal':
            
@@ -75,11 +73,13 @@ class Agentes():
        diferentes=np.array([self.Estado[:,s]-self.EstadoMezclado[:,s]!=0 for s in range(self.dim)])
        self.cambio=np.zeros(self.n, dtype=np.uint8)
        for i in range(self.n):
-           if self.Condicion_Tol[i]:
+           if self.Condicion_Tol[i]: #Si se atraen
+               #Elige uno de los diferentes
                verdaderos=np.where(diferentes[:,i])[0]
                if len(verdaderos)>0:
                    self.cambio[i]=int(np.random.choice(verdaderos))
            else:
+                #Elige uno al azar
                 self.cambio[i]=int(np.random.randint(self.dim))
 
    def Interaccion(self,Condicion,enElse):
@@ -103,9 +103,9 @@ class Agentes():
                        #Influencia negativa
                        if self.Estado[i][self.cambio[i]]==0:
                            #print('rechazo')
-                           if EstadoMezclado[i][self.cambio[i]]>0:
+                           if self.EstadoMezclado[i][self.cambio[i]]>0:
                                 self.Estado[i][self.cambio[i]]+=1
-                           elif EstadoMezclado[i][self.cambio[i]]<0:
+                           elif self.EstadoMezclado[i][self.cambio[i]]<0:
                                 self.Estado[i][self.cambio[i]]-=1
 
 def Ver_Estado(hist):
@@ -229,7 +229,11 @@ def Corrida_Total(Nombre,Condicion,enElse,alpha,cantidad_interacciones=700, Vece
         df_temporal=pd.DataFrame([range(0,cantidad_interacciones,10),Coherentes_temporal,Incoherentes_temporal,Indiferentes_temporal,Tibios_temporal])    
         df_temporal.to_csv(Nombre+'_Temporal_k='+str(round(k,2))+'.csv')
 
-        
+#%%
+plt.plot(range(0,200,10),Coherentes_temporal)
+plt.plot(range(0,200,10),Incoherentes_temporal)    
+plt.ylim((0,1))    
+plt.show()
  
 #%% FINALES Op 1
 k3=0
@@ -298,17 +302,31 @@ if not os.path.exists(final_directory):
 Corrida_Total(Nombre+'/',Condicion,enElse,tipoP,k3)
 
 #%%
-
+step=0.1
+K=np.arange(0,1+step,step)
+Total=np.zeros((len(K),4))
 k3=0
 Condicion='2-4'
 enElse='rechazo'
 tipoP='lineal'
-alpha=1
-Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)
-final_directory = os.path.join(current_directory, Nombre)
-if not os.path.exists(final_directory):
-   os.makedirs(final_directory)
-Corrida_Total(Nombre+'/',Condicion,enElse,alpha,cantidad_interacciones=150, Veces=5)
+
+
+for alpha in np.arange(0,1,0.1):
+    Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)+'SinBandos'
+    final_directory = os.path.join(current_directory, Nombre)
+    if not os.path.exists(final_directory):
+       os.makedirs(final_directory)
+    Corrida_Total(Nombre+'/',Condicion,enElse,alpha,cantidad_interacciones=200, Veces=20)
+
+    
+    i=0    
+    for k in K:
+        df=pd.read_csv(Nombre+'/'+'_Temporal_k='+str(round(k,2))+'.csv')    
+        Total[i]=(df.T.iloc[-1][1:]).T
+        i+=1
+    df=pd.DataFrame([K,Total.T[0],Total.T[1],Total.T[2],Total.T[3]],['K','Coherentes','Incoherentes','Indiferentes','Tibios'])
+    df.to_csv(Nombre+'/Finales.csv')
+
 
 #%%
 '''

@@ -43,9 +43,12 @@ class Agentes():
        Identidad=self.Ideologia*self.Ideologia[self.Js]
        self.Identidad=[(int(I>0)) for I in Identidad]
 
-   def ProbabilidadInteraccion(self,k1):
+   def ProbabilidadInteraccion(self,k1,alpha):
        #self.P=(k1)*(1-self.S)+np.array([(1-k1)*(abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])]))*self.Identidad[i] for i in range(self.n)]) #distancia
-       self.P=(k1)*(1-self.S)/2+np.array([((abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])])))/2 for i in range(self.n)]) #distancia      
+       self.P=((k1)*(1-self.S)+np.array([(abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])])) for i in range(self.n)]))/(k1+(1+alpha)/2) #distancia
+       #self.P=((k1)*(1-self.S)+np.array([(1-k1)*(abs(self.Ideologia[self.Js[i]]))*self.Identidad[i]  for i in range(self.n)])) #distancia
+
+       #self.P=(k1)*(1-self.S)+(1-k1)*np.array([((abs(self.Ideologiaxy[self.Js[i]][int(self.cambio[i])]))) for i in range(self.n)]) #distancia      
        '''
        if tipoP=='lineal':
            
@@ -141,13 +144,13 @@ def corrida(n,dim,cantidad,k1,alpha,Condicion,enElse):
             Ag.IdentidadIdeologica()
             Ag.rechazoOatraccion(Condicion)
             Ag.direccion()
-            Ag.ProbabilidadInteraccion(k1)
+            Ag.ProbabilidadInteraccion(k1,alpha)
             Ag.Interaccion(Condicion,enElse)
             #print(c)
             Historia.append(Ag.Estado.copy())
         return(Historia)
         
-def dibujar(Agentes,dim,n):
+def dibujar_hist(Agentes,dim,n):
     #Función que plotea el histograma en un estado, y devuelve los valores de la matriz de 3x3 con la densidad de poblacion
     hist=plt.hist2d([x[0] for x in Agentes],[x[1] for x in Agentes],bins=3,range=[[-1.5,1.5],[-1.5,1.5]],cmap=plt.get_cmap('BuPu'),vmin=0,vmax=n/2)
     #plt.show()
@@ -199,7 +202,7 @@ def Corrida_Total(Nombre,Condicion,enElse,alpha,cantidad_interacciones=700, Vece
             Historia=corrida(n,dim,cantidad_interacciones,k,alpha,Condicion,enElse)
             
             for i in range(0,int(cantidad_interacciones/10)):
-                hist=dibujar(Historia[i*10],dim,n)
+                hist=dibujar_hist(Historia[i*10],dim,n)
                 #Histograma+=hist/Veces
                 Paso_coherentes=((hist[0,0]+hist[2,2])/n)
                 Paso_incoherentes=((hist[0,2]+hist[2,0])/n)
@@ -230,8 +233,8 @@ def Corrida_Total(Nombre,Condicion,enElse,alpha,cantidad_interacciones=700, Vece
         df_temporal.to_csv(Nombre+'_Temporal_k='+str(round(k,2))+'.csv')
 
 #%%
-plt.plot(range(0,200,10),Coherentes_temporal)
-plt.plot(range(0,200,10),Incoherentes_temporal)    
+plt.plot(range(0,cantidad_interacciones,10),Coherentes_temporal)
+plt.plot(range(0,cantidad_interacciones,10),Incoherentes_temporal)    
 plt.ylim((0,1))    
 plt.show()
  
@@ -312,11 +315,12 @@ tipoP='lineal'
 
 
 for alpha in np.arange(0,1,0.1):
-    Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)+'SinBandos'
+    Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)+'SinBandos_normalizado'
+    #Nombre='BC='+Condicion+'_EnElse='+enElse+'Clasico'
     final_directory = os.path.join(current_directory, Nombre)
     if not os.path.exists(final_directory):
        os.makedirs(final_directory)
-    Corrida_Total(Nombre+'/',Condicion,enElse,alpha,cantidad_interacciones=200, Veces=20)
+    Corrida_Total(Nombre+'/',Condicion,enElse,alpha,cantidad_interacciones=200, Veces=10)
 
     
     i=0    

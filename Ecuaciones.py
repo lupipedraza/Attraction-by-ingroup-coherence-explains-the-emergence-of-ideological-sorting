@@ -61,7 +61,52 @@ df_coherentes_EC=np.zeros((10,11))
 
 for j,alpha in enumerate(np.arange(0,1,0.1)):
     for i, k1 in enumerate(K):
-        k2=1
+        k2=1-k1
+    
+        def ecuacion(t,x): #s<2/4
+            C,I,A,T=x
+            
+            dC=(T*C*k1/16+T*C*k2*(1+alpha)/8+T*C*k2/4+T**2/16*(k1)+T**2*k2/16)#+k2)-C*A*k1/2
+            dI=(T*I*k1/16+T*I*k2*(1-alpha)/8+T*I/4*(1-2*alpha)+T**2/16*(k1)+T**2*k2/16)#-I*A/2*k1
+            dA=(-A*C/2*(k1+k2*(1+alpha))-A*I/2*(k1+k2*(1-alpha))-T*A*k2/2)
+            dT=-dC-dI-dA#-C*T*k1/16+C*A*k1/2+A*I*k1/2-T*C*k2*1/4-T*I*k1/16-T**2/8*(k1)#-T**2/8*(k2/2)#-dC-dI-dA
+            dC=dC/(1+(k1+alpha)/2)
+            dI=dI/(1+(k1+alpha)/2)
+            dT=dT/(1+(k1+alpha)/2)
+            dA=dA/(1+(k1+alpha)/2)
+            '''
+            dC=T*C*k1*(1/16)**h+T*C*k2*(1/4)**h+T**2*k1*(1/16)**h#+k2)-C*A*k1/2
+            dI=T*I*(1/16)**h*(k1)+T**2*(k1+k2)*(1/16)**h#-I*A/2*k1
+            dA=-A*C*k1*(1/2)**h-A*I*k1*(1/2)**h
+            dT=-C*T*k1*(1/16)**h+C*A*k1*(1/2)**h+A*I*k1*(1/2)**h-T*C*k2*(1/4)**h-T*I*k1*(1/16)**h-T**2*k2*(1/16)**h-T**2*(1/8)**h*(k1)#-dC-dI-dA
+            '''
+            return([dC,dI,dA,dT])
+        res = solve_ivp(ecuacion, (0, 1000), [2./9, 2./9, 1./9,4./9])
+        Finales[i]=res.y.T[-1]
+        df_coherentes_EC[j][i]=res.y.T[-1][0]
+        #Tomar los valores finales
+
+plt.plot(1-K-k3,Finales,linewidth=3,linestyle='--',alpha=0.7)
+plt.xlabel('k',size=16)
+plt.ylabel('Poblaciones Finales',size=16)
+plt.title('alpha = '+str(alpha),size=16)
+plt.ylim((-0.03,1.03))   
+
+#%%
+
+Condicion='2-4'
+enElse='rechazo'
+tipoP='lineal'
+k3=0.0
+K=np.arange(0.0,1-k3+0.1,0.1) #Valores k1
+alpha=0.3
+Finales=np.zeros((len(K),4))
+i=0
+h=4
+df_coherentes_EC=np.zeros((10,11))
+alpha=0.1
+for i, k1 in enumerate(K):
+        k2=1-k1
     
         def ecuacion(t,x): #s<2/4
             C,I,A,T=x
@@ -79,16 +124,17 @@ for j,alpha in enumerate(np.arange(0,1,0.1)):
             return([dC,dI,dA,dT])
         res = solve_ivp(ecuacion, (0, 1000), [2./9, 2./9, 1./9,4./9])
         Finales[i]=res.y.T[-1]
-        df_coherentes_EC[j][i]=res.y.T[-1][0]
+        #df_coherentes_EC[j][i]=res.y.T[-1][0]
         #Tomar los valores finales
 
 plt.plot(1-K-k3,Finales,linewidth=3,linestyle='--',alpha=0.7)
 plt.xlabel('k',size=16)
 plt.ylabel('Poblaciones Finales',size=16)
-plt.title('h = '+str(h),size=16)
+plt.title('alpha = '+str(alpha),size=16)
 plt.ylim((-0.03,1.03))   
+
 #%%
-plt.imshow(np.array(df_coherentes_EC),extent=(0,1.1,0,1),cmap='coolwarm')
+plt.imshow(np.array(df_coherentes_EC),extent=(0,1.1,0,1),cmap='coolwarm',vmax=0.8,vmin=0.2)
 plt.colorbar()
 plt.title('Ecuaciones Coherentes',size=16)
 plt.xlabel('k',size=16)

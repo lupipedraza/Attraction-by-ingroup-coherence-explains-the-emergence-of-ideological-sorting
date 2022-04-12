@@ -17,8 +17,8 @@ k3=0
 Condicion='2-4'
 enElse='rechazo'
 tipoP='lineal'
-alpha=0.5
-Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)+'SinBandos'
+alpha=0.2
+Nombre='BC='+Condicion+'_EnElse='+enElse+'Clasico'
 def interpolar(lim_inf,lim_sup,Finales,K):
         borde_inf=np.searchsorted(Finales[:,0][::-1],lim_inf)
         borde_sup=np.searchsorted(Finales[:,0][::-1],lim_sup,side='rigth')
@@ -51,11 +51,11 @@ def dibujar(Condicion,enElse,tipoP,k3,Nombre,alpha):
         
         #Plotear simulacion
         lineObjects=ax
-        plt.plot((1-df.T[0][1:]),df.T[range(1,5)][1:],marker='o',linewidth=1,alpha=0.7,markersize=4)
+        plt.plot((df.T[0][1:]),df.T[range(1,5)][1:],marker='o',linewidth=1,alpha=0.7,markersize=4)
 
         
         #Plotear ecuaciones
-        lineObjects_=ax.plot(K,Finales,linewidth=3,linestyle='--',c='gray',alpha=0.7)
+        lineObjects=ax.plot(K,Finales,linewidth=3,linestyle='--',c='gray',alpha=0.7)
 
         #Formato plot
         ax.legend(iter(lineObjects), ('Coherentes','Incoherentes','Indiferentes','Tibios'),fontsize=13,loc='center left', bbox_to_anchor=(1, 0.5))
@@ -63,12 +63,11 @@ def dibujar(Condicion,enElse,tipoP,k3,Nombre,alpha):
         ax.set_ylabel('Poblaciones Finales',size=16)
         ax.set_title(Nombre,size=16)
         ax.set_ylim((-0.03,1.03))     
-        
         #Graficar las interpolaciones 
         lim_inf,lim_sup=0.55, 0.57
         borde_inf,borde_sup=interpolar(lim_inf,lim_sup,Finales,K)      
-        ax.errorbar((K[borde_inf]+K[borde_sup])/2, (lim_inf+lim_sup)/2, xerr=(K[borde_sup]-K[borde_inf])/2, yerr=(lim_sup-lim_inf)/2,marker='X',markersize=10,linewidth=1,c='k')
-        ax.ylim((0,1))
+        #ax.errorbar((K[borde_inf]+K[borde_sup])/2, (lim_inf+lim_sup)/2, xerr=(K[borde_sup]-K[borde_inf])/2, yerr=(lim_sup-lim_inf)/2,marker='X',markersize=10,linewidth=1,c='k')
+        #ax.ylim((0,1))
         #Inset (mismo plot)
         #axins = ax.inset_axes([0.02, 0.77, 0.2, 0.2])
         #axins.plot((1-df.T[0][1:]),df.T[range(1,5)][1:],marker='o',linewidth=1,alpha=0.7,markersize=4)
@@ -89,19 +88,23 @@ def dibujar(Condicion,enElse,tipoP,k3,Nombre,alpha):
 
 
         return()
+#%%
+alpha=0.9
+Nombre='BC='+Condicion+'_EnElse='+enElse+'Clasico'
 dibujar(Condicion,enElse,tipoP,k3,Nombre,alpha)
 #%%
 df_coherentes=np.zeros((10,11))
 #Mapa en 2 variables
 for i,alpha in enumerate(np.arange(0,1,0.1)):
-    Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)+'SinBandos'
+    Nombre='BC='+Condicion+'_EnElse='+enElse+'alpha='+str(alpha)+'SinBandos_k2'
+    #Nombre='E='+str(tipoP)+'_BC='+Condicion+'_EnElse='+enElse+'SinBandos'
 
     df=pd.read_csv(Nombre+'/Finales.csv')#Datos simulacion
     df_coherentes[i]=(df.T[1][1:])
     
-plt.imshow(np.array(df_coherentes),extent=(0,1.1,0,1),cmap='coolwarm')
+plt.imshow(np.array(df_coherentes),extent=(0,1.1,0,1),cmap='coolwarm', vmax=0.6, vmin=0.4)
 plt.colorbar()
-plt.title('Ecuaciones Coherentes',size=16)
+plt.title('Simulación Coherentes',size=16)
 plt.xlabel('k',size=16)
 #plt.yticks(np.arange(0,1.1,0.1))
 #plt.yticks(np.arange(0,1.1,0.1))

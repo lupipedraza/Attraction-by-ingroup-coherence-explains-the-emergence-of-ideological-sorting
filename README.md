@@ -31,3 +31,7 @@ Data and simulations:
 * **Simulations_Else**=pass_Classic.txt: These files contain all simulations, including intermediate states, for the mean proportions of each population in the pass model.
 * **Simulations_Else=rejection_Error.txt**: These files contain only the final states of each simulation in the rejection model.
 * **Simulations_Else=pass_Error.txt**: These files contain only the final states of each simulation in the pass model.
+
+Figures:
+
+The resulting graphics, both in .pdf and .jpg.

@@ -15,23 +15,23 @@ Political polarization has become a growing concern in democratic societies, as 
 
 * R: dplyr, haven.
 	
-## Components of this repository
+This repository comprises the following components:
 
-There are four scripts:
+**Scripts**:
 
-* **simultions.py**: It contains the code to perform simulations of the model with different variations.
-* **load_equations.py**: The equations developed analytically, in their various variants
-* **draw_all.py**: plot the simulations results and compare with the equations. Compare also with data.
-* **CompleteAnalisis.r**: procces and get the mean proportion of coherence from data.
+* **simulations.py**: This script contains the code required to perform simulations of the model.
+* **load_equations.py**: It encompasses the analytically developed equations.
+* **draw_all.py**: This script is designed for plotting the simulation results, conducting comparisons with the equations, and analyzing them alongside the empirical data.
+* **CompleteAnalysis.r**: This script facilitates the processing and derivation of the mean proportion of coherence from the data.
 
-Data and simulations:
+**Data and Simulations**:
 
-* **ExportFromPython.csv**: The processed real data.
-* **Simulations_Else=rejection_Classic.txt**: These files contain all simulations, including intermediate states, for the mean proportions of each population in the rejection model.
-* **Simulations_Else**=pass_Classic.txt: These files contain all simulations, including intermediate states, for the mean proportions of each population in the pass model.
-* **Simulations_Else=rejection_Error.txt**: These files contain only the final states of each simulation in the rejection model.
-* **Simulations_Else=pass_Error.txt**: These files contain only the final states of each simulation in the pass model.
+* **ExportFromPython.csv**: This file stores the processed real data.
+* **Simulations_Else=rejection_Classic.txt**: These files encompass all simulations, including intermediate states, pertaining to the mean proportions of each population within the repulsive model.
+* **Simulations_Else=pass_Classic.txt**: These files contain all simulations, including intermediate states, pertaining to the mean proportions of each population within the non-repulsive model.
+* **Simulations_Else=rejection_Error.txt**: These files exclusively contain the final states of each simulation within the repulsive model.
+* **Simulations_Else=pass_Error.txt**: These files exclusively contain the final states of each simulation within the non-repulsive model.
 
-Figures:
+**Figures**:
 
-The resulting graphics, both in .pdf and .jpg.
+The generated graphics are also accessible in both .pdf and .jpg formats.

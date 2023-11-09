@@ -9,16 +9,6 @@ These are the scripts and simulated data for:
 Political polarization has become a growing concern in democratic societies, as it drives tribal alignments and erodes civic deliberation among citizens. Given its prevalence across different countries, previous research has sought to understand the conditions under which people tend to endorse extreme opinions. However, in polarized contexts, citizens not only adopt more extreme views but also become more correlated across issues which are, a priori, seemingly unrelated. This phenomenon, known as “ideological sorting”, has been increasing in recent years but the micro-level mechanisms underlying its emergence remain poorly understood. Here, we study the conditions under which a social dynamic system is expected to become ideologically sorted as a function of the mechanisms of interaction between its individuals. To this end, we developed and analyzed a multidimensional agent-based model that incorporates two mechanisms: homophily (where people tend to interact with those holding similar opinions) and ingroup-coherence favoritism (where people tend to interact with ingroups holding politically coherent opinions). We developed and solved the model’s master equations that perfectly describe the system’s dynamics and found that ideological sorting only emerges in models that include ingroup-coherence favoritism. We then compared the model’s outcomes with empirical data proceeding from 24,035 opinions across 67 topics, and found that ingroup-coherence favoritism is significantly present in datasets that measure political attitudes, but it is absent across non-political topics. Overall, this work combines theoretical approaches from system dynamics with model-based analyses of empirical data to uncover a potential mechanism underlying the pervasiveness of ideological sorting.
 
 
-## Repository overview
-
-Most of this project is written in Python. Python scripts are used to construct the model, simulate the model, and analyze model outputs. R is used exclusively for 
-
-This project had three main components that can be found in different subdirectories within this repository:
-
-model: the theoretical & computational model that is at the core of this project.
-observational: the main empirical test of model predictions that collected and analyzed data from Twitter.
-experimental: an additional empirical test in which we deployed a digital experiment on Twitter.
-
 ## Necessary packages for this model
 
 * Python: All Python packages for this project can be found in <requirements.txt> and can easily be installed with <pip install -r requirements.txt> from command line.

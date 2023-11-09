@@ -76,7 +76,7 @@ def solve_equation(K, elseClause, final=600):
 
 def draw_interpolation(K, elseClause, Name, interpolators):
 
-   """
+    """
     Create Figure 3: Plot simulations and equations with interpolations.
 
     Args:

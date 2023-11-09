@@ -29,8 +29,8 @@ This repository comprises the following components:
 * **ExportFromPython.csv**: This file stores the processed real data.
 * **Simulations_Else=rejection_Classic.txt**: These files encompass all simulations, including intermediate states, pertaining to the mean proportions of each population within the repulsive model.
 * **Simulations_Else=pass_Classic.txt**: These files contain all simulations, including intermediate states, pertaining to the mean proportions of each population within the non-repulsive model.
-* **Simulations_Else=rejection_Error.txt**: These files exclusively contain the final states of each simulation within the repulsive model.
-* **Simulations_Else=pass_Error.txt**: These files exclusively contain the final states of each simulation within the non-repulsive model.
+* **Simulations_Else=rejection_Error.txt**: These files capture the final states of each simulation for every instance, providing insights into the error distribution within the repulsive model.
+* **Simulations_Else=pass_Error.txt**: These files record the ultimate states of each simulation for each occurrence, providing insights into the error distribution within the non-repulsive model.
 
 **Figures**:
 
